@@ -19,9 +19,10 @@ public class Server {
     BufferedReader reader;
     BufferedWriter writer;
     
-    public Server(int porta) {
+    public Server(int porta,int t) {
         try {
             serverSock=new ServerSocket(porta);
+            serverSock.setSoTimeout(t);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,9 +54,9 @@ public class Server {
         }
     }
     
-    public void scrittura() {
+    public void scrittura(String s) {
         try {
-            writer.write("Benvenuto!\n");
+            writer.write(s+"\n");
             writer.flush();
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,7 +71,7 @@ public class Server {
         }
     }
     
-    public void data() {
+    public void sync() {
         try {
             if("date".equals(reader.readLine())) {
                 Long tmStmp = System.currentTimeMillis();

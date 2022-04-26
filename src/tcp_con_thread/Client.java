@@ -29,14 +29,14 @@ public class Client {
         }
     }
     
-    public void lettura() {
+    public String lettura() {
+        String msg = null;
         try {
-            System.out.println(reader.readLine());
+            msg = reader.readLine();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Connessione Avvenuta\n");
-        System.out.println("Socket" + client);
+        return msg;
     }
     
     public void scrittura(String testo) {

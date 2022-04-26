@@ -14,15 +14,19 @@ import java.util.logging.Logger;
  * @author salva
  */
 public class MainClient {
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        int TIME = 0;
+        int PORT = 2000;
         try {
-            Client c = new Client(InetAddress.getLocalHost(), 2000);
-//            c.lettura();
-//            c.data();
+            InetAddress IP = InetAddress.getLocalHost();
+            Client c = new Client(IP, PORT);
+            System.out.println(c.lettura());
+            TIME = Integer.parseInt(c.lettura());
+            CountDown timer = new CountDown(TIME);
+            timer.start();
             c.chiusura();
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
