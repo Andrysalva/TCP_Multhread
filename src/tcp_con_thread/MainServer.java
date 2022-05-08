@@ -4,6 +4,8 @@
  */
 package tcp_con_thread;
 
+import java.net.Socket;
+
 /**
  *
  * @author salva
@@ -15,15 +17,18 @@ public class MainServer {
      */
     public static void main(String[] args) {
         int PORT = 2000;
-        int TIME = 20000;
-        
-        Server s=new Server(PORT,TIME);
-        while(true){
-            CountDown timerAttesa = new CountDown(TIME);
-            s.attendi();
-            s.scrittura("il server sarà in ascolto per: "+(TIME/1000)+" secondi");
-            s.scrittura(String.valueOf(TIME));
-            timerAttesa.start();
+        int TIME = 20;
+        int CTIME = 10;
+
+        Server s = new Server(PORT, TIME);
+        while (true) {
+            s.accetta(CTIME);
         }
+//            CountDown timerAttesa = new CountDown(TIME);
+//            s.scrittura("il server sarà in ascolto per: " + (TIME / 1000) + " secondi");
+//            s.scrittura(String.valueOf(TIME));
+//            timerAttesa.start();
+//        }
+
     }
 }

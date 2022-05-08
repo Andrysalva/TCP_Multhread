@@ -20,7 +20,7 @@ public class CountDown extends Thread{
     public void run(){
         System.out.println("attendo risposta...\n");
         conta();
-        System.out.println("connessione chiusa\n");
+        //System.out.println("connessione chiusa\n");
     }
     public void conta(){
         for(int i=time/1000;i>0;i--){

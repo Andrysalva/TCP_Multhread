@@ -24,9 +24,8 @@ public class MainClient {
             InetAddress IP = InetAddress.getLocalHost();
             Client c = new Client(IP, PORT);
             System.out.println(c.lettura());
-            TIME = Integer.parseInt(c.lettura());
-            CountDown timer = new CountDown(TIME);
-            timer.start();
+            //TIME = Integer.parseInt(c.lettura());
+            //c.timer(TIME);
             c.chiusura();
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);

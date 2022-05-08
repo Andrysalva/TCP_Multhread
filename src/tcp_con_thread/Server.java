@@ -14,72 +14,42 @@ import java.util.logging.Logger;
  * @author salva
  */
 public class Server {
+
     ServerSocket serverSock;
-    Socket server;
+    Socket socket;
     BufferedReader reader;
     BufferedWriter writer;
-    
-    public Server(int porta,int t) {
+
+    public Server(int porta, int t) {
         try {
-            serverSock=new ServerSocket(porta);
-            serverSock.setSoTimeout(t);
+            serverSock = new ServerSocket(porta);
+            serverSock.setSoTimeout(t*1000);
+            serverSock.setReuseAddress(true);
+        } catch (SocketTimeoutException ex) {
+            System.out.println("Il server non accetta più richieste");
+            System.err.print(ex);
+        } catch (ConnectException ex) {
+            System.err.print(ex);
+        } catch (SocketException ex) {
+            System.err.print(ex);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void attendi() {
+
+    public void accetta(int clientTimeout) {
         try {
-            server=serverSock.accept();
-            reader=new BufferedReader(new InputStreamReader(server.getInputStream()));
-            writer=new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+            socket = serverSock.accept();
+            socket.setSoTimeout(clientTimeout * 1000);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            System.out.println("client connesso: " + socket.getInetAddress().getHostAddress());
+            ClientHandler handler = new ClientHandler(socket);
+            new Thread(handler).start();
+        } catch (SocketException ex) {
+            System.err.println(ex);
         } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void chiusuraServer() {
-        try {
-            serverSock.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void chiusuraConnessione() {
-        try {
-            server.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void scrittura(String s) {
-        try {
-            writer.write(s+"\n");
-            writer.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void lettura() {
-        try {
-            System.out.println(reader.readLine());
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void sync() {
-        try {
-            if("date".equals(reader.readLine())) {
-                Long tmStmp = System.currentTimeMillis();
-                writer.write(tmStmp+"\n");
-                writer.flush();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
     }
 }

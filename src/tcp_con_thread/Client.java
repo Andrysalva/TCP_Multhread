@@ -15,20 +15,21 @@ import java.util.logging.Logger;
  * @author salva
  */
 public class Client {
+
     Socket client;
     BufferedReader reader;
     BufferedWriter writer;
-    
+
     public Client(InetAddress ip, int porta) {
         try {
-            client=new Socket(ip, porta);
-            reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
-            writer=new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            client = new Socket(ip, porta);
+            reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public String lettura() {
         String msg = null;
         try {
@@ -38,36 +39,41 @@ public class Client {
         }
         return msg;
     }
-    
+
     public void scrittura(String testo) {
         try {
             //scrivo al server un testo dato come parametro alla funzione
-            writer.write(testo+"\n");
+            writer.write(testo + "\n");
             writer.flush();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void data() {
         try {
             //scrivo la richiesta al server
             writer.write("date\n");
             writer.flush();
-            
+
             //leggo la richiesta e la mostro in output
-            Timestamp time=new Timestamp(Long.parseLong(reader.readLine()));
+            Timestamp time = new Timestamp(Long.parseLong(reader.readLine()));
             System.out.println(time);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public void timer(int t) {
+        CountDown timer = new CountDown(t);
+        timer.start();
+    }
+
     public void chiusura() {
         try {
             client.close();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 }
